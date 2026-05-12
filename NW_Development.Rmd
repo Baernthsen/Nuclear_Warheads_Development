@@ -1,0 +1,112 @@
+---
+title: "Nuclear weapons devolopment over time"
+author: "Olivia Kusk, Natasha Due, Simone Bærnthsen"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Explore Nuclear Weapons' stockpile over time
+We want to use ggplot to investigate how the development of Nuclear Weapons' stockpile in Russia and the US over the period from 1945-2024.
+```{r libraries, echo = FALSE}
+#running of needed library
+library(tidyverse)
+library(here)
+library(dplyr)
+
+#getting the data
+NW_stockpiles <- read_csv("data/NW_stockpile.csv")
+```
+
+### Check data and renaming columns
+We are going to check if the data is correctly loaded and if anythings need to be changed to make it easier to work with, and renaming column 1 from "Entity" to "Country" and column 4 from "Number of nuclear warheads" to "Number_of_NW".
+```{r datacheck}
+#Renaming columns
+names(NW_stockpiles)[1]<-"Country"
+names(NW_stockpiles)[3]<-"Year"
+names(NW_stockpiles)[4]<-"Number_of_NW"
+
+#Check the data
+str(NW_stockpiles)
+unique(NW_stockpiles$Country)
+first(NW_stockpiles$Year)
+glimpse(NW_stockpiles)
+```
+
+### Plotting of the nuclear warhead stockpiles
+We are going to create an graph that compare all of the countries with nuclear warheads and the whole world.
+```{r plot-nuclear-wearheads, eval = FALSE}
+NW_stockpiles %>% 
+  ggplot(aes(x=Year,y=Number_of_NW, colour = Country))+
+  geom_line()+
+  theme_linedraw()
+```
+
+### Plotting of the nuclear warhead stockpiles
+To better understand the individual among of nuclear warheads pr country and the world, we will also splitting them into individual graphs.
+```{r plot-nuclear-warheads-individual eval = FALSE}
+NW_stockpiles %>% 
+  ggplot(aes(x=Year,y=Number_of_NW, colour = Country))+
+  geom_line()+
+  theme_bw()+
+  facet_wrap(~Country)
+```
+
+### Creating a dataset without Russia and the US
+Because Russia and the US (and the whole world) have a lot more nuclear warheads than the rest of the countries, will we create a new dataset without Russia, the US and the World.
+```{r creating-new-dataset, eval = FALSE}
+Without_Rus_US <- NW_stockpiles %>% 
+  filter(Country!="Russia") %>% 
+  filter(Country!="United States") %>% 
+  filter(Country!="World")
+```
+
+### Plotting of the nuclear warhead stockpiles
+We are going to create an graph that compare the countries with nuclear warheads after removing Russia, the US and the World.
+```{r plot-nuclear-wearheads-without, eval = FALSE}
+Without_Rus_US %>% 
+   ggplot(aes(x=Year,y=Number_of_NW, colour = Country))+
+  geom_line()+
+  theme_linedraw()
+```
+
+### Plotting of the nuclear warhead stockpiles individual
+Once again we are splitting the individual graphs to better see the individual countries data.
+```{r plot-nuclear-warheads-individual2 eval = FALSE}
+Without_Rus_US %>% 
+  ggplot(aes(x=Year,y=Number_of_NW, colour = Country))+
+  geom_line()+
+  theme_bw()+
+  facet_wrap(~Country)
+```
+
+### Creating a dataset only with Russia and the US
+We will also create a dataset only with Russia and the US.
+```{r creat-nuclear-wearheads-Rus-US, eval = FALSE}
+Only_Rus_US <- NW_stockpiles %>% 
+  filter(Country =="Russia"|Country=="United States")
+```
+
+### Plotting of the nuclear warhead stockpiles
+We are going to create an graph that compare the countries with nuclear warheads after removing Russia, the US and the World.
+```{r plot-nuclear-wearheads-Rus-Us, eval = FALSE}
+Only_Rus_US %>% 
+  ggplot(aes(x=Year,y=Number_of_NW, colour = Country))+
+  geom_line()+
+  theme_linedraw()
+```
+
+### ### Plotting of the nuclear warhead stockpiles individual
+Here will we split Russia and the US into individual graphs to better understand the countries data.
+
+```{r plot-nuclear-warheads-individual3 eval = FALSE}
+Only_Rus_US %>% 
+  ggplot(aes(x=Year,y=Number_of_NW, colour = Country))+
+  geom_line()+
+  theme_bw()+
+  facet_wrap(~Country)
+```
+
